@@ -3,7 +3,7 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
     $servername = "localhost";
     $username = "root";
     $password = "";
-    $db = "db_mentx";
+    $db = "db_login";
 
     // Konexioa sortu
 	$mysqli = new mysqli($servername, $username, $password, $db);
@@ -60,7 +60,8 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
 							<a href="../html/beldurrezkoak.html">Beldurra</a>
 						</div>
 					</li>
-					<li><a href="../html/erreserbak.html">Erreserbak</a></li>
+					<li><a href="../Datuak/erreserbak.php">Erreserbak</a></li>
+				
 				</ul>
 			</nav>
 		</div>
