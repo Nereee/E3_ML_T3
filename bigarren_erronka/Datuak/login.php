@@ -19,7 +19,7 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
     $result = $mysqli->query($kontsulta);
 
     if ($result->num_rows > 0) {
-        header("Location: ../html/erreserbak.html");
+        header("Location: ../Datuak/erreserbak.php");
         exit(); 
     } else {
         echo "Pasahitza edo erabiltzailea ez dira zuzenak";
