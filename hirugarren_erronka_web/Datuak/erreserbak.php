@@ -1,41 +1,10 @@
-<?php
-if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $db = "db_login";
-
-    // Konexioa sortu
-	$mysqli = new mysqli($servername, $username, $password, $db);
-    // Konexioa egiaztatu
-    if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
-    }
-
-	// Kontsulta
-    $izena = $_GET["erabiltzaile"];
-    $pwd = $_GET["pasahitza"];
-	$kontsulta = "SELECT id FROM erabiltzaile WHERE izena = '$izena' AND pasahitza = '$pwd'";
-    $result = $mysqli->query($kontsulta);
-
-    if ($result->num_rows > 0) {
-        header("Location: ../html/erreserbak.html");
-        exit(); 
-    } else {
-        echo "Pasahitza edo erabiltzailea ez dira zuzenak";
-    }
-
-    // Konexioa itxi
-   		 $mysqli->close();
-}
-?><!--HTML FORMATUA-->
+<!--HTML FORMATUA-->
 <!DOCTYPE html>
 
 <!--HIZKUNTZA-->
 <html lang="zxx">
 
 <!--HEAD atala html-aren itxura "aldatzeko"-->
-
 <head>
     <meta charset="utf-8">
     <meta name="author" content="2.Taldea">
@@ -48,8 +17,7 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
 </head>
 
 <!--BODY atala gure web orrialdean agertu den informazioa idazteko-->
-
-<body>
+<body onload="ZinemaIzena()">
     <!--TITULU PRINTZIPAL ETA GARRANTZITSUENA-->
     <header id="main-header">
         <div id="image-text-container">
@@ -72,7 +40,7 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
                 </ul>
             </nav>
         </div>
-    </header><!-- / #main-header -->
+    </header><!-- #main-header -->
 
     <main id="main-content">
         <article id="izenburuak-erreserbak">
@@ -84,65 +52,27 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
 
                 <section class="formularioaI">
                     <form action="JS.js">
-                        <h5>Erreserba Osatu</h5>
-                        <label for="aretoa">Aretoa aukeratu: </label>
-                        <select id="aretoa" name="aretoa">
-                            <option value="1">Yelmo cines Megapark</option>
-                            <option value="2">Merkatu zaharra Erandio</option>
-                            <option value="3">Cinessa MaxCenter</option>
-                            <option value="4">Yelmo cines Artea</option>
-                            <option value="5">Elorrieta Cines</option>
+                        <h6>Erreserba Osatu</h6>
+                        <label for="zinema">Zinema aukeratu: </label>
+                        <br>
+                        <select id="zinema" name="zinema" onchange="Zinema_url()">
+                           
                         </select>
                         <br>
-                        <!-- Generoa aukeratu -->
-                        <label for="generoa">Generoa aukeratu:</label>
-                        <select id="generoa" name="generoa" onchange="aldatu()">
-                            <option value="0">Aukeratu...</option>
-                            <option value="1">Drama</option>
-                            <option value="2">Beldurra</option>
-                            <option value="3">Zientzia-fikzioa</option>
-                            <option value="4">Komedia</option>
-                        </select>
-						<br>
+                        
+                        <label for="pelikula" onchange="Pelikula_url()">Pelikula aukeratu: </label>
+                        <br>
                         <select id="pelikula" name="pelikula">
-                            <option value="-"></option>
+                            
                         </select>
-                        <script>
-                            var drama = new Array('-', 'Handia', 'La lista de Schindler', 'Cadena Perpetua', 'Million Dolar Baby');
-                            var zientziafikzioa = new Array('-', 'Odisea en el Espacio', 'La novia de Frankenstein', 'El planeta de los Simios', 'Alien, el octavo pasajero');
-                            var komedia = new Array('-', 'Scary Movie', 'El Gran Lebowski', 'La vida de Bryan', 'Aterriza como puedas');
-                            var beldurra = new Array('-', 'Psicosis', 'El resplandor', 'Dracula', 'Cisne Negro');
-                    
-                            //Un Array de Arrays
-                            var generoak = [
-                                [],
-                                drama,
-                                zientziafikzioa,
-                                komedia,
-                                beldurra,
-                            ];
-                            function aldatu() {
-                                let generoID = document.getElementById("generoa").value;
-                                if (generoID != 0) {
-                                    let gen = generoak[generoID];
-                                    let genero_zerrenda = document.getElementById("pelikula");
-									genero_zerrenda.innerHTML="";
-                                   
-                                    for (let i = 0; i < gen.length; i++) {
-                                        let aukera = document.createElement("option");
-                                        let testua = document.createTextNode(gen[i]);
-                                        aukera.appendChild(testua);
-                                        genero_zerrenda.appendChild(aukera);
-                                    }
-                                }
-                            }
-                    
-                        </script>
+                        
                         <br>
-                        <label for="pelikula">Eguna aukeratu: </label>
+                        <label for="data">Data aukeratu: </label>
+                        <br>
                         <input type="date">
                         <br>
                         <label for="saioa">Saioa aukeratu: </label>
+                        <br>
                         <select id="saioa" name="saioa">
                             <option value="1">18:00</option>
                             <option value="2">20:00</option>
@@ -244,7 +174,79 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
                 src="https://mirrors.creativecommons.org/presskit/icons/nd.svg?ref=chooser-v1" alt="4"></a>
     </footer> <!-- / #main-footer -->
 
+    <script>
+    function ZinemaIzena() {
+        var zinema = document.getElementById("zinema");
+
+        <?php
+
+        $mysqli = new mysqli("localhost", "root", "", "e3");
+
+        if ($mysqli->connect_error) {
+            die("Connection failed: " . $mysqli->connect_error);
+        }
+
+        $sql = "SELECT id_zinema, zinema_izena FROM zinema";
+        $result = $mysqli->query($sql);
+
+        while ($row = $result->fetch_assoc()) {
+        ?>
+            var option = document.createElement("option");
+            option.value = "<?php echo $row['id_zinema']; ?>";
+            option.textContent = "<?php echo $row['zinema_izena']; ?>";
+            zinema.appendChild(option);
+        <?php
+        }
+
+        $mysqli->close();
+        ?>
+    }
+
+    function Zinema_url(){
+        let zinema = document.getElementById("zinema");
+        let patharray = window.location.pathname;
+        window.location = window.location.pathname + "?zinema="+zinema.value;
+    }
+
+    function PelikulaIzena() {
+        var pelikula = document.getElementById("pelikula");
+        <?php
+
+        $mysqli = new mysqli("localhost", "root", "", "e3");
+
+        $sql = "SELECT film_izena, id_filma FROM filma join zinema using (id_zinema) WHERE id_zinema = ?";
+
+        $stmt = $mysqli->prepare($sql);
+
+        $stmt->bind_param("i", $_GET['zinema']);
+
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+        ?>
+            var option = document.createElement("option");
+            option.value = "<?php echo $row['id_filma']; ?>";
+            option.textContent = "<?php echo $row['film_izena']; ?>";
+            pelikula.appendChild(option);
+        <?php
+        }
+
+        $stmt->close();
+        $mysqli->close();
+        ?>
+    }
+    function Pelikula_url(){
+        let zinema = document.getElementById("zinema");
+        let pelikula = document.getElementById("pelikula");
+        let patharray = window.location.pathname;
+        window.location = window.location.pathname + "?zinema="+zinema.value + "&pelikula="+pelikula.value;
+
+    }
+</script>
 
 </body>
+
 
 </html>

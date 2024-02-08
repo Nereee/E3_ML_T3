@@ -3,7 +3,7 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
     $servername = "localhost";
     $username = "root";
     $password = "";
-    $db = "db_login";
+    $db = "e3";
 
     // Konexioa sortu
 	$mysqli = new mysqli($servername, $username, $password, $db);
@@ -15,7 +15,7 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
 	// Kontsulta
     $izena = $_GET["erabiltzaile"];
     $pwd = $_GET["pasahitza"];
-	$kontsulta = "SELECT id FROM erabiltzaile WHERE izena = '$izena' AND pasahitza = '$pwd'";
+	$kontsulta = "SELECT bezero_izena FROM bezeroa WHERE erabiltzailea = '$izena' AND pasahitza = '$pwd'";
     $result = $mysqli->query($kontsulta);
 
     if ($result->num_rows > 0) {
