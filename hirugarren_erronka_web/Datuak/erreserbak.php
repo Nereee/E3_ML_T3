@@ -1,9 +1,7 @@
 <!--HTML FORMATUA-->
 <!DOCTYPE html>
-
 <!--HIZKUNTZA-->
 <html lang="zxx">
-
 <!--HEAD atala html-aren itxura "aldatzeko"-->
 <head>
     <meta charset="utf-8">
@@ -15,7 +13,6 @@
     <link rel="stylesheet" href="../plantilla.css">
     <link rel="stylesheet" href="../style.css">
 </head>
-
 <!--BODY atala gure web orrialdean agertu den informazioa idazteko-->
 <body onload="ZinemaIzena()">
     <!--TITULU PRINTZIPAL ETA GARRANTZITSUENA-->
@@ -28,7 +25,7 @@
                 <ul>
                     <li><a href="../index.html">Hasiera</a></li>
                     <li><a href="nortzuk.html">Guri buruz</a></li>
-                    <li id="desplegablea" class="dropdown"><a href="karteldegia.html">Karteldegia</a>
+                    <li id="desplegablea" class="dropdown"><a href="karteldegia.html"> Karteldegia </a>
                         <div id="desplegablea-a">
                             <a href="drama.html">Drama</a>
                             <a href="zi-fi.html">Zi-Fi</a>
@@ -40,52 +37,34 @@
                 </ul>
             </nav>
         </div>
-    </header><!-- #main-header -->
-
+    </header> <!-- #main-header -->
     <main id="main-content">
         <article id="izenburuak-erreserbak">
             <header>
                 <h2>EROSKETAREN XEHETASUNAK</h2>
             </header>
             <div class="formulario">
-
-
                 <section class="formularioaI">
-                    <form action="JS.js">
-                        <h6>Erreserba Osatu</h6>
-                        <label for="zinema">Zinema aukeratu: </label>
-                        <br>
-                        <select id="zinema" name="zinema" onchange="Zinema_url()">
-                           
-                        </select>
-                        <br>
-                        
-                        <label for="pelikula" onchange="Pelikula_url()">Pelikula aukeratu: </label>
-                        <br>
-                        <select id="pelikula" name="pelikula">
-                            
-                        </select>
-                        
-                        <br>
-                        <label for="data">Data aukeratu: </label>
-                        <br>
-                        <input type="date">
-                        <br>
-                        <label for="saioa">Saioa aukeratu: </label>
-                        <br>
-                        <select id="saioa" name="saioa">
-                            <option value="1">18:00</option>
-                            <option value="2">20:00</option>
-
-                        </select>
-                        <br>
-                        <br>
-                        <input class="botoia" type="submit" name="botoia" value="Jarraitu">
-                    </form>
+                <form id="erosketaForm" action="procesar.php" method="POST">
+                    <h6>Erreserba Osatu</h6>
+                    <label for="zinema">Zinema aukeratu: </label><br>
+                    <select id="zinema" name="zinema" onchange="Zinema_url()">
+                        <option value="0">----</option>
+                        <!-- PHP para generar opciones de zinema -->
+                    </select><br>
+                    <label for="pelikula">Pelikula aukeratu: </label><br>
+                    <select id="pelikula" name="pelikula" onchange="Pelikula_url()">
+                        <option value="0">----</option>
+                        <!-- PHP para generar opciones de película -->
+                    </select><br>
+                    <label for="eguna">Data aukeratu: </label><br>
+                    <input type="date" name="eguna" id="eguna" min="<?= date('Y-m-d') ?>"><br>
+                    <label for="saioa">Saioa aukeratu: </label><br>
+                    <select id="saioa" name="saioa"></select><br><br>
+                    <input class="botoia" type="submit" name="botoia" value="Jarraitu">
+                </form>
                 </section>
             </div>
-
-
             </form>
             <div class="content">
                 <p>Gure zentroan bertan sarrerak erosi ditzakezu. Gure webgunean berriz, sarrerak ezin direnez online
@@ -148,7 +127,6 @@
                     referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </article> <!-- /article -->
-
     </main> <!-- / #main-content -->
 
     <footer>
@@ -175,76 +153,116 @@
     </footer> <!-- / #main-footer -->
 
     <script>
-    function ZinemaIzena() {
-        var zinema = document.getElementById("zinema");
+    document.getElementById('erosketaForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevenir que el formulario se envíe normalmente
 
-        <?php
+        // Obtener el valor de la fecha seleccionada
+        var fechaSeleccionada = document.getElementById('eguna').value;
 
-        $mysqli = new mysqli("localhost", "root", "", "e3");
+        // Crear un campo oculto en el formulario para enviar la fecha al servidor
+        var hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'data'; // Nombre del campo que recibirá el valor en PHP
+        hiddenInput.value = fechaSeleccionada;
+        this.appendChild(hiddenInput);
 
-        if ($mysqli->connect_error) {
-            die("Connection failed: " . $mysqli->connect_error);
-        }
-
-        $sql = "SELECT id_zinema, zinema_izena FROM zinema";
-        $result = $mysqli->query($sql);
-
-        while ($row = $result->fetch_assoc()) {
-        ?>
-            var option = document.createElement("option");
-            option.value = "<?php echo $row['id_zinema']; ?>";
-            option.textContent = "<?php echo $row['zinema_izena']; ?>";
-            zinema.appendChild(option);
-        <?php
-        }
-
-        $mysqli->close();
-        ?>
-    }
-
-    function Zinema_url(){
-        let zinema = document.getElementById("zinema");
-        let patharray = window.location.pathname;
-        window.location = window.location.pathname + "?zinema="+zinema.value;
-    }
-
-    function PelikulaIzena() {
-        var pelikula = document.getElementById("pelikula");
-        <?php
-
-        $mysqli = new mysqli("localhost", "root", "", "e3");
-
-        $sql = "SELECT film_izena, id_filma FROM filma join zinema using (id_zinema) WHERE id_zinema = ?";
-
-        $stmt = $mysqli->prepare($sql);
-
-        $stmt->bind_param("i", $_GET['zinema']);
-
-        $stmt->execute();
-
-        $result = $stmt->get_result();
-
-        while ($row = $result->fetch_assoc()) {
-        ?>
-            var option = document.createElement("option");
-            option.value = "<?php echo $row['id_filma']; ?>";
-            option.textContent = "<?php echo $row['film_izena']; ?>";
-            pelikula.appendChild(option);
-        <?php
-        }
-
-        $stmt->close();
-        $mysqli->close();
-        ?>
-    }
-    function Pelikula_url(){
-        let zinema = document.getElementById("zinema");
-        let pelikula = document.getElementById("pelikula");
-        let patharray = window.location.pathname;
-        window.location = window.location.pathname + "?zinema="+zinema.value + "&pelikula="+pelikula.value;
-
-    }
+        // Enviar el formulario
+        this.submit();
+    });
 </script>
+    <script>
+
+        function ZinemaIzena(){
+            <?php
+            $mysqli = new mysqli("localhost","root","", "e3");
+            $sql = "SELECT id_zinema,zinema_izena FROM zinema";
+            $result = $mysqli->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                ?>
+                    var aukera = document.createElement("option");
+                    aukera.value = "<?php echo $row['id_zinema']; ?>";
+                    aukera.textContent = "<?php echo $row['zinema_izena']; ?>";
+                    zinema.appendChild(aukera);
+    
+                <?php
+                }
+            ?>
+            <?php
+                if(isset($_GET['zinema'])){
+                ?>
+                document.getElementById('zinema').value = "<?php echo $_GET['zinema']?>";
+                <?php       
+                $zinema = $_GET['zinema'];          
+                $sql = "SELECT DISTINCT id_filma,film_izena FROM filma JOIN saioa using (id_filma)  WHERE id_zinema = $zinema ";
+                $result = $mysqli->query($sql);
+                while ($row = $result->fetch_assoc()) {
+                ?>
+                    var aukera = document.createElement("option");
+                    aukera.value = "<?php echo $row['id_filma']; ?>";
+                    aukera.textContent = "<?php echo $row['film_izena']; ?>";
+                    document.getElementById('pelikula').appendChild(aukera);
+                <?php
+                }
+            }
+            ?>
+            <?php 
+            if(isset($_GET['zinema']) && isset($_GET['filma'] )){ // Agrega isset para verificar si ambos parámetros existen
+            ?>
+                document.getElementById('pelikula').value = "<?php echo $_GET['filma'] ?>"; // Corrige el nombre de la función getElementById
+                document.getElementById('filma').value = "<?php echo $_GET['zinema'] ?>"; // Corrige el nombre de la función getElementById
+
+            <?php
+                $zinema = $_GET['zinema'];
+                $filma = $_GET['filma'];
+                
+            }
+            ?>
+            // no worst
+            <?php 
+            if(isset($_GET['zinema']) && isset($_GET['filma']) && isset($_GET['eguna'] )){
+            ?>
+                // document.getElementById('saioa').value = "<?php echo $_GET['saioa'] ?>"; 
+                // document.getElementById('saioa').value = "<?php echo $_GET['eguna'] ?>"; 
+                // document.getElementById('eguna').value = "<?php echo $_GET['filma'] ?>";
+            <?php
+                // $zinema = $_GET['zinema'];  
+                // $filma = $_GET['filma'];  
+                // $eguna = $_GET['eguna']; 
+                // $saioa = $_GET['saioa'];                 
+                $sql = "SELECT ordutegia FROM saioa inner join filma using (id_filma) WHERE saioaren_eguna = $eguna ";
+                $result = $mysqli->query($sql);
+                while ($row = $result->fetch_assoc()) {
+                ?>
+                    var aukera = document.createElement("option");                    
+                    aukera.textContent = "<?php echo $row['ordutegia']; ?>";
+                    document.getElementById('saioa').appendChild(aukera);
+                <?php
+                }
+            }
+            ?>
+        
+    }
+        function Zinema_url(){
+            let zinema = document.getElementById("zinema");
+            window.location = window.location.pathname + "?zinema="+zinema.value;
+
+        }
+        function Pelikula_url(){
+           let zinema = document.getElementById("zinema");
+           let film = document.getElementById("pelikula");
+           let patharray = window.location.pathname;
+           window.location = window.location.pathname + "?zinema="+zinema.value + "&filma="+film.value;
+        } 
+        function Eguna_url(){
+           let zinema = document.getElementById("zinema");
+           let film = document.getElementById("pelikula");
+           let eguna = document.getElementbyId("eguna");
+           let patharray = window.location.pathname;
+           window.location = window.location.pathname + "?zinema="+zinema.value + "&filma="+ filma.value+ "¿eguna="+eguna.value;
+        } 
+        
+        
+    </script>
 
 </body>
 

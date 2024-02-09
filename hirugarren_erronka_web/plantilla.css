@@ -183,8 +183,8 @@ iframe {
   margin-bottom: 100px;
   box-shadow: 7px 13px 37px rgb(0, 0, 0);
   padding: 20px 30px;
-  border-top: 4px solid #ff0000;
-  color: #ff0000;
+  border-top: 4px solid #b92929;
+  color: #b92929;
 }
 
 /* Formularioan tituluaren estiloa aldatzeko */
@@ -201,7 +201,7 @@ iframe {
 /* Idazteko espazioak konfiguratzeko */
 .control {
     width: 100%;
-    border: 1px solid rgb(255, 0, 0);
+    border: 1px solid #b92929;
     margin-bottom: 15px;
     padding: 15px 10px;
     background: #000000;
@@ -214,7 +214,7 @@ iframe {
 .botoia {
     width: 100%;
     height: 40px;
-    background: #ff0000;
+    background: #b92929;
     border: none;
     color: rgb(255, 255, 255);
     margin-bottom: 16px ;
@@ -240,15 +240,14 @@ iframe {
 /* Formularioa eta kutxaren sorkuntza */
 .formularioaI {
     width: 400px;
-    height: 340px;
+    min-height: 340px;
     background: #323030;
     margin: auto;
     margin-top: 100px;
     margin-bottom: 100px;
-    box-shadow: 7px 13px 37px rgb(0, 0, 0);
     padding: 20px 30px;
-    border-top: 4px solid #ff0000;
-    color: #ff0000;
+    border-top: 4px solid #b92929;
+    color: #b92929;
   }
   
   /* Formularioan tituluaren estiloa aldatzeko */
@@ -259,7 +258,7 @@ iframe {
       margin-bottom: 30px;
       border-bottom: 1px solid;
       font-size: 20px;
-      color:white
+      color:white;
   }
   .formularioaI p {
     height: 40px;
