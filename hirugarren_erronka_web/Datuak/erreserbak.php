@@ -58,7 +58,7 @@
                         <!-- PHP para generar opciones de película -->
                     </select><br>
                     <label for="eguna">Data aukeratu: </label><br>
-                    <input type="date" name="eguna" id="eguna" min="<?= date('Y-m-d') ?>"><br>
+                    <input type="date" onchange="Eguna_url()" name="eguna" id="eguna" min="<?= date('Y-m-d') ?>"><br>
                     <label for="saioa">Saioa aukeratu: </label><br>
                     <select id="saioa" name="saioa"></select><br><br>
                     <input class="botoia" type="submit" name="botoia" value="Jarraitu">
@@ -212,34 +212,22 @@
                 document.getElementById('filma').value = "<?php echo $_GET['zinema'] ?>"; // Corrige el nombre de la función getElementById
 
             <?php
-                $zinema = $_GET['zinema'];
-                $filma = $_GET['filma'];
+               
                 
             }
             ?>
-            // no worst
             <?php 
-            if(isset($_GET['zinema']) && isset($_GET['filma']) && isset($_GET['eguna'] )){
+            if(isset($_GET['zinema']) && isset($_GET['filma'] ) && isset($_GET['eguna'] )){ // Agrega isset para verificar si ambos parámetros existen
             ?>
-                // document.getElementById('saioa').value = "<?php echo $_GET['saioa'] ?>"; 
-                // document.getElementById('saioa').value = "<?php echo $_GET['eguna'] ?>"; 
-                // document.getElementById('eguna').value = "<?php echo $_GET['filma'] ?>";
+                document.getElementById('pelikula').value = "<?php echo $_GET['filma'] ?>"; // Corrige el nombre de la función getElementById
+                document.getElementById('filma').value = "<?php echo $_GET['zinema'] ?>"; // Corrige el nombre de la función getElementById
+                document.getElementById('eguna').value = "<?php echo $_GET['eguna'] ?>";
             <?php
-                // $zinema = $_GET['zinema'];  
-                // $filma = $_GET['filma'];  
-                // $eguna = $_GET['eguna']; 
-                // $saioa = $_GET['saioa'];                 
-                $sql = "SELECT ordutegia FROM saioa inner join filma using (id_filma) WHERE saioaren_eguna = $eguna ";
-                $result = $mysqli->query($sql);
-                while ($row = $result->fetch_assoc()) {
-                ?>
-                    var aukera = document.createElement("option");                    
-                    aukera.textContent = "<?php echo $row['ordutegia']; ?>";
-                    document.getElementById('saioa').appendChild(aukera);
-                <?php
-                }
+             
+                
             }
             ?>
+            
         
     }
         function Zinema_url(){
@@ -250,17 +238,31 @@
         function Pelikula_url(){
            let zinema = document.getElementById("zinema");
            let film = document.getElementById("pelikula");
-           let patharray = window.location.pathname;
            window.location = window.location.pathname + "?zinema="+zinema.value + "&filma="+film.value;
         } 
         function Eguna_url(){
-           let zinema = document.getElementById("zinema");
-           let film = document.getElementById("pelikula");
-           let eguna = document.getElementbyId("eguna");
-           let patharray = window.location.pathname;
-           window.location = window.location.pathname + "?zinema="+zinema.value + "&filma="+ filma.value+ "¿eguna="+eguna.value;
-        } 
-        
+            <?php
+            if (isset($_GET['zinema']) && isset($_GET['filma'] )){
+                $zinema = $_GET['zinema'];
+                $filma = $_GET['filma'];
+                $sql = "SELECT ordutegia FROM saioa WHERE id_zinema=$zinema AND id_filma= $filma ";
+                $result = $mysqli->query($sql);
+
+                
+            ?>
+                    let data = document.getElementById("eguna");
+                    let filma = document.getElementById("pelikula");
+                    let zinema = document.getElementById("zinema");
+                    window.location = window.location.pathname + "?zinema="+zinema.value + "&filma="+ filma.value+ "&eguna="+eguna.value;
+                
+            <?php
+                } 
+            
+            
+            ?>
+        }
+    
+      
         
     </script>
 
