@@ -1,34 +1,4 @@
-<?php
-if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $db = "e3";
 
-    // Konexioa sortu
-	$mysqli = new mysqli($servername, $username, $password, $db);
-    // Konexioa egiaztatu
-    if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
-    }
-
-	// Kontsulta
-    $izena = $_GET["erabiltzaile"];
-    $pwd = $_GET["pasahitza"];
-	$kontsulta = "SELECT bezero_izena FROM bezeroa WHERE erabiltzailea = '$izena' AND pasahitza = '$pwd'";
-    $result = $mysqli->query($kontsulta);
-
-    if ($result->num_rows > 0) {
-        header("Location: ../Datuak/erreserbak.php");
-        exit(); 
-    } else {
-        echo "Pasahitza edo erabiltzailea ez dira zuzenak";
-    }
-
-    // Konexioa itxi
-   		 $mysqli->close();
-}
-?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -60,7 +30,7 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
 							<a href="../html/beldurrezkoak.html">Beldurra</a>
 						</div>
 					</li>
-					<li><a href="../Datuak/erreserbak.php">Erreserbak</a></li>
+					<li><a href="../Datuak/login.php">Erreserbak</a></li>
 				
 				</ul>
 			</nav>
@@ -72,9 +42,9 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
             <form action="../Datuak/login.php" method="get" name="formulario_login" id="formulario_login">
 			<h5>Saio hasiera</h5>
 			<!-- Gmail-a idazteko -->
-			<input class="control" type="text" name="erabiltzaile" value="" placeholder="Idatzi zure erabiltzailea">
+			<input class="control" type="text" name="erabiltzaile" value="" placeholder="Idatzi zure erabiltzailea" required>
 			<!-- Pasahitza idazteko, idazten dena ez da ikusiko (puntuak agertzen dira) -->
-			<input class="control" type="password" name="pasahitza" value="" placeholder="Pasahitza">
+			<input class="control" type="password" name="pasahitza" value="" placeholder="Pasahitza" required>
 			<!-- Botoi bat egiteko -->
 			<input class="botoia" type="submit" name="botoia" value="Jarraitu">
 			<p><a href="#"><b>Ez dut pasahitza gogoratzen</b></a></p>
@@ -94,7 +64,41 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
         </div>
 		<a href="http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;"><img class="fi" style="height:22px;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt="1"><img style="height:22px;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt="2"><img style="height:22px;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt="3"><img style="height:22px;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nd.svg?ref=chooser-v1" alt="4"></a>
 	</footer> <!-- / #main-footer -->
+<script>
+	<?php
+if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $db = "e3";
 
+    // Konexioa sortu
+	$mysqli = new mysqli($servername, $username, $password, $db);
+    // Konexioa egiaztatu
+    if ($mysqli->connect_error) {
+        die("Connection failed: " . $mysqli->connect_error);
+    }
+
+	// Kontsulta
+    $izena = $_GET["erabiltzaile"];
+    $pwd = $_GET["pasahitza"];
+	$kontsulta = "SELECT bezero_izena FROM bezeroa WHERE erabiltzailea = '$izena' AND pasahitza = '$pwd'";
+    $result = $mysqli->query($kontsulta);
+
+    if ($result->num_rows > 0) {
+        header("Location: ../Datuak/erreserbak.php");
+        exit(); 
+    } else {
+		?>
+        window.alert("Pasahitza edo erabiltzailea ez dira zuzenak") ;
+		<?php
+    }
+
+    // Konexioa itxi
+   		 $mysqli->close();
+}
+?>
+</script>
 	
 </body>
 </html>

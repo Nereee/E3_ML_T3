@@ -24,16 +24,16 @@
             <nav id="gohiburua">
                 <ul>
                     <li><a href="../index.html">Hasiera</a></li>
-                    <li><a href="nortzuk.html">Guri buruz</a></li>
-                    <li id="desplegablea" class="dropdown"><a href="karteldegia.html"> Karteldegia </a>
+                    <li><a href="../html/nortzuk.html">Guri buruz</a></li>
+                    <li id="desplegablea" class="dropdown"><a href="../html/karteldegia.html"> Karteldegia </a>
                         <div id="desplegablea-a">
-                            <a href="drama.html">Drama</a>
-                            <a href="zi-fi.html">Zi-Fi</a>
-                            <a href="komedia.html">Komedia</a>
-                            <a href="beldurrezkoak.html">Beldurra</a>
+                            <a href="../html/drama.html">Drama</a>
+                            <a href="../html/zi-fi.html">Zi-Fi</a>
+                            <a href="../html/komedia.html">Komedia</a>
+                            <a href="../html/beldurrezkoak.html">Beldurra</a>
                         </div>
                     </li>
-                    <li><a href="erreserbak.html">Erreserbak</a></li>
+                    <li><a href="../Datuak/erreserbak.html">Erreserbak</a></li>
                 </ul>
             </nav>
         </div>
