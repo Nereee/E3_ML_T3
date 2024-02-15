@@ -58,7 +58,8 @@
                         <!-- PHP para generar opciones de película -->
                     </select><br>
                     <label for="eguna">Data aukeratu: </label><br>
-                    <input type="date" onchange="Eguna_url()" name="eguna" id="eguna" min="<?= date('Y-m-d') ?>"><br>
+                    <input type="date" onchange="Eguna_url()" name="eguna" id="eguna" min="<?= date('2024-02-01') ?>"><br> 
+                    <!-- (Y-m-d) -->
                     <label for="saioa">Saioa aukeratu: </label><br>
                     <select id="saioa" name="saioa"></select><br><br>
                     <input class="botoia" type="submit" name="botoia" value="Jarraitu">
@@ -153,42 +154,28 @@
     </footer> <!-- / #main-footer -->
 
     <script>
-    document.getElementById('erosketaForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevenir que el formulario se envíe normalmente
-
-        // Obtener el valor de la fecha seleccionada
-        var fechaSeleccionada = document.getElementById('eguna').value;
-
-        // Crear un campo oculto en el formulario para enviar la fecha al servidor
-        var hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.name = 'data'; // Nombre del campo que recibirá el valor en PHP
-        hiddenInput.value = fechaSeleccionada;
-        this.appendChild(hiddenInput);
-
-        // Enviar el formulario
-        this.submit();
-    });
-</script>
-    <script>
-
         function ZinemaIzena(){
             <?php
+            // KONEXIOA SORTZEKO
             $mysqli = new mysqli("localhost","root","", "e3");
+
+            // Datu basearekin kontsulta egiteko
             $sql = "SELECT id_zinema,zinema_izena FROM zinema";
             $result = $mysqli->query($sql);
+
+            // Datu basean zerbait egonda (row) sortuko du "option" bat "select"-ean
             while ($row = $result->fetch_assoc()) {
                 ?>
                     var aukera = document.createElement("option");
-                    aukera.value = "<?php echo $row['id_zinema']; ?>";
-                    aukera.textContent = "<?php echo $row['zinema_izena']; ?>";
+                    aukera.value = "<?php echo $row['id_zinema']; ?>"; //sortutakoaren balorea hartzen du datu baseetatik (id_zinema)
+                    aukera.textContent = "<?php echo $row['zinema_izena']; ?>"; //sortutakoaren izena hartzen du datu baseetatik (zinema_izena)
                     zinema.appendChild(aukera);
     
                 <?php
                 }
             ?>
             <?php
-                if(isset($_GET['zinema'])){
+                if(isset($_GET['zinema'])){ // isset erabiltzen da jarrita dauden ikusteko
                 ?>
                 document.getElementById('zinema').value = "<?php echo $_GET['zinema']?>";
                 <?php       
@@ -205,41 +192,64 @@
                 }
             }
             ?>
-            <?php 
-            if(isset($_GET['zinema']) && isset($_GET['filma'] )){ // Agrega isset para verificar si ambos parámetros existen
-            ?>
-                document.getElementById('pelikula').value = "<?php echo $_GET['filma'] ?>"; // Corrige el nombre de la función getElementById
-                document.getElementById('filma').value = "<?php echo $_GET['zinema'] ?>"; // Corrige el nombre de la función getElementById
 
-            <?php
-               
-                
+            <?php 
+            if(isset($_GET['zinema']) && isset($_GET['filma'] )){  // isset erabiltzen da jarrita dauden ikusteko
+            ?>
+                document.getElementById('pelikula').value = "<?php echo $_GET['filma'] ?>";
+                document.getElementById('filma').value = "<?php echo $_GET['zinema'] ?>";
+            <?php 
             }
             ?>
+
             <?php 
-            if(isset($_GET['zinema']) && isset($_GET['filma'] ) && isset($_GET['eguna'] )){ // Agrega isset para verificar si ambos parámetros existen
+            if(isset($_GET['zinema']) && isset($_GET['filma'] ) && isset($_GET['eguna'] )){ // isset erabiltzen da jarrita dauden ikusteko
             ?>
-                document.getElementById('pelikula').value = "<?php echo $_GET['filma'] ?>"; // Corrige el nombre de la función getElementById
-                document.getElementById('filma').value = "<?php echo $_GET['zinema'] ?>"; // Corrige el nombre de la función getElementById
+                document.getElementById('pelikula').value = "<?php echo $_GET['filma'] ?>"; 
+                document.getElementById('filma').value = "<?php echo $_GET['zinema'] ?>"; 
                 document.getElementById('eguna').value = "<?php echo $_GET['eguna'] ?>";
             <?php
-             
-                
             }
             ?>
+
+            <?php
+            if(isset($_GET['zinema']) && isset($_GET['filma'] ) && isset($_GET['eguna'] )){
             
-        
-    }
+            $data = $_GET['eguna'];  
+            $sql = "SELECT id_saioa, ordutegia, saioaren_eguna FROM saioa WHERE saioaren_eguna = $data";
+            $result = $mysqli->query($sql);
+
+            // Datu basean zerbait egonda (row) sortuko du "option" bat "select"-ean
+            while ($row = $result->fetch_assoc()) {
+                ?>
+                    var aukera = document.createElement("option");
+                    aukera.value = "<?php echo $row['id_saioa']; ?>"; //sortutakoaren balorea hartzen du datu baseetatik (id_zinema)
+                    aukera.textContent = "<?php echo $row['ordutegia']; ?>"; //sortutakoaren izena hartzen du datu baseetatik (zinema_izena)
+                    saioa.appendChild(aukera);
+    
+                <?php
+                }}
+            ?>
+        }
+    
+        //Zinema aukeratzean url-an agertzeko, onchange-ean jartzen da
+
         function Zinema_url(){
             let zinema = document.getElementById("zinema");
             window.location = window.location.pathname + "?zinema="+zinema.value;
 
         }
+
+        //Pelikula aukeratzean url-an agertzeko, onchange-ean jartzen da
+
         function Pelikula_url(){
            let zinema = document.getElementById("zinema");
            let film = document.getElementById("pelikula");
            window.location = window.location.pathname + "?zinema="+zinema.value + "&filma="+film.value;
         } 
+
+        //Eguna aukeratzean url-an agertzeko, onchange-ean jartzen da
+
         function Eguna_url(){
             <?php
             if (isset($_GET['zinema']) && isset($_GET['filma'] )){
@@ -261,6 +271,25 @@
             
             ?>
         }
+
+        // Inprimakia normalean (default) bidaltzea prebenitzen du
+        document.getElementById('erosketaForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+
+        // Aukeratutako data ateratzeko
+        var dataAukera = document.getElementById('eguna').value;
+
+        // Sortzen du input izkutu bat formularioan
+        var hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'data';
+        hiddenInput.value = dataAukera;
+        this.appendChild(hiddenInput);
+
+        // Formulariora bidaltzeko
+        this.submit();
+    });
     
       
         
