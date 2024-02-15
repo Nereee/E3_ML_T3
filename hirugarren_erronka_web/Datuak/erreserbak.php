@@ -197,7 +197,6 @@
             if(isset($_GET['zinema']) && isset($_GET['filma'] )){  // isset erabiltzen da jarrita dauden ikusteko
             ?>
                 document.getElementById('pelikula').value = "<?php echo $_GET['filma'] ?>";
-                document.getElementById('filma').value = "<?php echo $_GET['zinema'] ?>";
             <?php 
             }
             ?>
@@ -206,7 +205,6 @@
             if(isset($_GET['zinema']) && isset($_GET['filma'] ) && isset($_GET['eguna'] )){ // isset erabiltzen da jarrita dauden ikusteko
             ?>
                 document.getElementById('pelikula').value = "<?php echo $_GET['filma'] ?>"; 
-                document.getElementById('filma').value = "<?php echo $_GET['zinema'] ?>"; 
                 document.getElementById('eguna').value = "<?php echo $_GET['eguna'] ?>";
             <?php
             }
