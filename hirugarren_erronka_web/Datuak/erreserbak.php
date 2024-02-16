@@ -33,7 +33,7 @@
                             <a href="../html/beldurrezkoak.html">Beldurra</a>
                         </div>
                     </li>
-                    <li><a href="../Datuak/erreserbak.html">Erreserbak</a></li>
+                    <li><a href="erreserbak.php">Erreserbak</a></li>
                 </ul>
             </nav>
         </div>
@@ -68,9 +68,7 @@
             </div>
             </form>
             <div class="content">
-                <p>Gure zentroan bertan sarrerak erosi ditzakezu. Gure webgunean berriz, sarrerak ezin direnez online
-                    bidez erosi,
-                    salgai ditugun zentro desberdinak aztertu eta bertan sarrerak erosi ditzakezu.
+                <p> Webgune honen bidez edota gure zentroan bertan sarrerak erosi ditzakezu.
                     Hona hemen, gure sarrerak erosteko ahalbidetuta dauden zinema-aretoak</p>
             </div>
             <div class="content">
@@ -270,24 +268,6 @@
             ?>
         }
 
-        // Inprimakia normalean (default) bidaltzea prebenitzen du
-        document.getElementById('erosketaForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-
-        // Aukeratutako data ateratzeko
-        var dataAukera = document.getElementById('eguna').value;
-
-        // Sortzen du input izkutu bat formularioan
-        var hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.name = 'data';
-        hiddenInput.value = dataAukera;
-        this.appendChild(hiddenInput);
-
-        // Formulariora bidaltzeko
-        this.submit();
-    });
     
       
         
