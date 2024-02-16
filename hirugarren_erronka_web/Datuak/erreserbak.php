@@ -1,41 +1,8 @@
-<?php
-if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $db = "db_login";
-
-    // Konexioa sortu
-	$mysqli = new mysqli($servername, $username, $password, $db);
-    // Konexioa egiaztatu
-    if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
-    }
-
-	// Kontsulta
-    $izena = $_GET["erabiltzaile"];
-    $pwd = $_GET["pasahitza"];
-	$kontsulta = "SELECT id FROM erabiltzaile WHERE izena = '$izena' AND pasahitza = '$pwd'";
-    $result = $mysqli->query($kontsulta);
-
-    if ($result->num_rows > 0) {
-        header("Location: ../html/erreserbak.html");
-        exit(); 
-    } else {
-        echo "Pasahitza edo erabiltzailea ez dira zuzenak";
-    }
-
-    // Konexioa itxi
-   		 $mysqli->close();
-}
-?><!--HTML FORMATUA-->
+<!--HTML FORMATUA-->
 <!DOCTYPE html>
-
 <!--HIZKUNTZA-->
 <html lang="zxx">
-
 <!--HEAD atala html-aren itxura "aldatzeko"-->
-
 <head>
     <meta charset="utf-8">
     <meta name="author" content="2.Taldea">
@@ -46,10 +13,8 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
     <link rel="stylesheet" href="../plantilla.css">
     <link rel="stylesheet" href="../style.css">
 </head>
-
 <!--BODY atala gure web orrialdean agertu den informazioa idazteko-->
-
-<body>
+<body onload="ZinemaIzena()">
     <!--TITULU PRINTZIPAL ETA GARRANTZITSUENA-->
     <header id="main-header">
         <div id="image-text-container">
@@ -59,108 +24,51 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
             <nav id="gohiburua">
                 <ul>
                     <li><a href="../index.html">Hasiera</a></li>
-                    <li><a href="nortzuk.html">Guri buruz</a></li>
-                    <li id="desplegablea" class="dropdown"><a href="karteldegia.html">Karteldegia</a>
+                    <li><a href="../html/nortzuk.html">Guri buruz</a></li>
+                    <li id="desplegablea" class="dropdown"><a href="../html/karteldegia.html"> Karteldegia </a>
                         <div id="desplegablea-a">
-                            <a href="drama.html">Drama</a>
-                            <a href="zi-fi.html">Zi-Fi</a>
-                            <a href="komedia.html">Komedia</a>
-                            <a href="beldurrezkoak.html">Beldurra</a>
+                            <a href="../html/drama.html">Drama</a>
+                            <a href="../html/zi-fi.html">Zi-Fi</a>
+                            <a href="../html/komedia.html">Komedia</a>
+                            <a href="../html/beldurrezkoak.html">Beldurra</a>
                         </div>
                     </li>
-                    <li><a href="erreserbak.html">Erreserbak</a></li>
+                    <li><a href="erreserbak.php">Erreserbak</a></li>
                 </ul>
             </nav>
         </div>
-    </header><!-- / #main-header -->
-
+    </header> <!-- #main-header -->
     <main id="main-content">
         <article id="izenburuak-erreserbak">
             <header>
                 <h2>EROSKETAREN XEHETASUNAK</h2>
             </header>
             <div class="formulario">
-
-
                 <section class="formularioaI">
-                    <form action="JS.js">
-                        <h5>Erreserba Osatu</h5>
-                        <label for="aretoa">Aretoa aukeratu: </label>
-                        <select id="aretoa" name="aretoa">
-                            <option value="1">Yelmo cines Megapark</option>
-                            <option value="2">Merkatu zaharra Erandio</option>
-                            <option value="3">Cinessa MaxCenter</option>
-                            <option value="4">Yelmo cines Artea</option>
-                            <option value="5">Elorrieta Cines</option>
-                        </select>
-                        <br>
-                        <!-- Generoa aukeratu -->
-                        <label for="generoa">Generoa aukeratu:</label>
-                        <select id="generoa" name="generoa" onchange="aldatu()">
-                            <option value="0">Aukeratu...</option>
-                            <option value="1">Drama</option>
-                            <option value="2">Beldurra</option>
-                            <option value="3">Zientzia-fikzioa</option>
-                            <option value="4">Komedia</option>
-                        </select>
-						<br>
-                        <select id="pelikula" name="pelikula">
-                            <option value="-"></option>
-                        </select>
-                        <script>
-                            var drama = new Array('-', 'Handia', 'La lista de Schindler', 'Cadena Perpetua', 'Million Dolar Baby');
-                            var zientziafikzioa = new Array('-', 'Odisea en el Espacio', 'La novia de Frankenstein', 'El planeta de los Simios', 'Alien, el octavo pasajero');
-                            var komedia = new Array('-', 'Scary Movie', 'El Gran Lebowski', 'La vida de Bryan', 'Aterriza como puedas');
-                            var beldurra = new Array('-', 'Psicosis', 'El resplandor', 'Dracula', 'Cisne Negro');
-                    
-                            //Un Array de Arrays
-                            var generoak = [
-                                [],
-                                drama,
-                                zientziafikzioa,
-                                komedia,
-                                beldurra,
-                            ];
-                            function aldatu() {
-                                let generoID = document.getElementById("generoa").value;
-                                if (generoID != 0) {
-                                    let gen = generoak[generoID];
-                                    let genero_zerrenda = document.getElementById("pelikula");
-									genero_zerrenda.innerHTML="";
-                                   
-                                    for (let i = 0; i < gen.length; i++) {
-                                        let aukera = document.createElement("option");
-                                        let testua = document.createTextNode(gen[i]);
-                                        aukera.appendChild(testua);
-                                        genero_zerrenda.appendChild(aukera);
-                                    }
-                                }
-                            }
-                    
-                        </script>
-                        <br>
-                        <label for="pelikula">Eguna aukeratu: </label>
-                        <input type="date">
-                        <br>
-                        <label for="saioa">Saioa aukeratu: </label>
-                        <select id="saioa" name="saioa">
-                            <option value="1">18:00</option>
-                            <option value="2">20:00</option>
-
-                        </select>
-                        <br>
-                        <br>
-                        <input class="botoia" type="submit" name="botoia" value="Jarraitu">
-                    </form>
+                <form id="erosketaForm" action="procesar.php" method="POST">
+                    <h6>Erreserba Osatu</h6>
+                    <label for="zinema">Zinema aukeratu: </label><br>
+                    <select id="zinema" name="zinema" onchange="Zinema_url()">
+                        <option value="0">----</option>
+                        <!-- PHP para generar opciones de zinema -->
+                    </select><br>
+                    <label for="pelikula">Pelikula aukeratu: </label><br>
+                    <select id="pelikula" name="pelikula" onchange="Pelikula_url()">
+                        <option value="0">----</option>
+                        <!-- PHP para generar opciones de película -->
+                    </select><br>
+                    <label for="eguna">Data aukeratu: </label><br>
+                    <input type="date" onchange="Eguna_url()" name="eguna" id="eguna" min="<?= date('2024-02-01') ?>"><br> 
+                    <!-- (Y-m-d) -->
+                    <label for="saioa">Saioa aukeratu: </label><br>
+                    <select id="saioa" name="saioa"></select><br><br>
+                    <input class="botoia" type="submit" name="botoia" value="Jarraitu">
+                </form>
                 </section>
             </div>
-
-
             </form>
             <div class="content">
-                <p>Gure zentroan bertan sarrerak erosi ditzakezu. Gure webgunean berriz, sarrerak ezin direnez online
-                    bidez erosi,
-                    salgai ditugun zentro desberdinak aztertu eta bertan sarrerak erosi ditzakezu.
+                <p> Webgune honen bidez edota gure zentroan bertan sarrerak erosi ditzakezu.
                     Hona hemen, gure sarrerak erosteko ahalbidetuta dauden zinema-aretoak</p>
             </div>
             <div class="content">
@@ -218,7 +126,6 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
                     referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </article> <!-- /article -->
-
     </main> <!-- / #main-content -->
 
     <footer>
@@ -244,7 +151,129 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
                 src="https://mirrors.creativecommons.org/presskit/icons/nd.svg?ref=chooser-v1" alt="4"></a>
     </footer> <!-- / #main-footer -->
 
+    <script>
+        function ZinemaIzena(){
+            <?php
+            // KONEXIOA SORTZEKO
+            $mysqli = new mysqli("localhost","root","", "e3");
+
+            // Datu basearekin kontsulta egiteko
+            $sql = "SELECT id_zinema,zinema_izena FROM zinema";
+            $result = $mysqli->query($sql);
+
+            // Datu basean zerbait egonda (row) sortuko du "option" bat "select"-ean
+            while ($row = $result->fetch_assoc()) {
+                ?>
+                    var aukera = document.createElement("option");
+                    aukera.value = "<?php echo $row['id_zinema']; ?>"; //sortutakoaren balorea hartzen du datu baseetatik (id_zinema)
+                    aukera.textContent = "<?php echo $row['zinema_izena']; ?>"; //sortutakoaren izena hartzen du datu baseetatik (zinema_izena)
+                    zinema.appendChild(aukera);
+    
+                <?php
+                }
+            ?>
+            <?php
+                if(isset($_GET['zinema'])){ // isset erabiltzen da jarrita dauden ikusteko
+                ?>
+                document.getElementById('zinema').value = "<?php echo $_GET['zinema']?>";
+                <?php       
+                $zinema = $_GET['zinema'];          
+                $sql = "SELECT DISTINCT id_filma,film_izena FROM filma JOIN saioa using (id_filma)  WHERE id_zinema = $zinema ";
+                $result = $mysqli->query($sql);
+                while ($row = $result->fetch_assoc()) {
+                ?>
+                    var aukera = document.createElement("option");
+                    aukera.value = "<?php echo $row['id_filma']; ?>";
+                    aukera.textContent = "<?php echo $row['film_izena']; ?>";
+                    document.getElementById('pelikula').appendChild(aukera);
+                <?php
+                }
+            }
+            ?>
+
+            <?php 
+            if(isset($_GET['zinema']) && isset($_GET['filma'] )){  // isset erabiltzen da jarrita dauden ikusteko
+            ?>
+                document.getElementById('pelikula').value = "<?php echo $_GET['filma'] ?>";
+            <?php 
+            }
+            ?>
+
+            <?php 
+            if(isset($_GET['zinema']) && isset($_GET['filma'] ) && isset($_GET['eguna'] )){ // isset erabiltzen da jarrita dauden ikusteko
+            ?>
+                document.getElementById('pelikula').value = "<?php echo $_GET['filma'] ?>"; 
+                document.getElementById('eguna').value = "<?php echo $_GET['eguna'] ?>";
+            <?php
+            }
+            ?>
+
+            <?php
+            if(isset($_GET['zinema']) && isset($_GET['filma'] ) && isset($_GET['eguna'] )){
+            
+            $data = $_GET['eguna'];  
+            $sql = "SELECT id_saioa, ordutegia, saioaren_eguna FROM saioa WHERE saioaren_eguna = $data";
+            $result = $mysqli->query($sql);
+
+            // Datu basean zerbait egonda (row) sortuko du "option" bat "select"-ean
+            while ($row = $result->fetch_assoc()) {
+                ?>
+                    var aukera = document.createElement("option");
+                    aukera.value = "<?php echo $row['id_saioa']; ?>"; //sortutakoaren balorea hartzen du datu baseetatik (id_zinema)
+                    aukera.textContent = "<?php echo $row['ordutegia']; ?>"; //sortutakoaren izena hartzen du datu baseetatik (zinema_izena)
+                    saioa.appendChild(aukera);
+    
+                <?php
+                }}
+            ?>
+        }
+    
+        //Zinema aukeratzean url-an agertzeko, onchange-ean jartzen da
+
+        function Zinema_url(){
+            let zinema = document.getElementById("zinema");
+            window.location = window.location.pathname + "?zinema="+zinema.value;
+
+        }
+
+        //Pelikula aukeratzean url-an agertzeko, onchange-ean jartzen da
+
+        function Pelikula_url(){
+           let zinema = document.getElementById("zinema");
+           let film = document.getElementById("pelikula");
+           window.location = window.location.pathname + "?zinema="+zinema.value + "&filma="+film.value;
+        } 
+
+        //Eguna aukeratzean url-an agertzeko, onchange-ean jartzen da
+
+        function Eguna_url(){
+            <?php
+            if (isset($_GET['zinema']) && isset($_GET['filma'] )){
+                $zinema = $_GET['zinema'];
+                $filma = $_GET['filma'];
+                $sql = "SELECT ordutegia FROM saioa WHERE id_zinema=$zinema AND id_filma= $filma ";
+                $result = $mysqli->query($sql);
+
+                
+            ?>
+                    let data = document.getElementById("eguna");
+                    let filma = document.getElementById("pelikula");
+                    let zinema = document.getElementById("zinema");
+                    window.location = window.location.pathname + "?zinema="+zinema.value + "&filma="+ filma.value+ "&eguna="+eguna.value;
+                
+            <?php
+                } 
+            
+            
+            ?>
+        }
+
+    
+      
+        
+    </script>
 
 </body>
+
 
 </html>
