@@ -61,7 +61,8 @@
                     <input type="date" onchange="Eguna_url()" name="eguna" id="eguna" min="<?= date('2024-02-01') ?>"><br> 
                     <!-- (Y-m-d) -->
                     <label for="saioa">Saioa aukeratu: </label><br>
-                    <select id="saioa" name="saioa"></select><br><br>
+                    <select id="saioa" name="saioa" onchange="Saioa_url()">
+                    <option value="0">----</option></select><br><br>
                     <input class="botoia" type="submit" name="botoia" value="Jarraitu">
                 </form>
                 </section>
@@ -154,10 +155,16 @@
     <script>
         function ZinemaIzena(){
             <?php
-            // KONEXIOA SORTZEKO
-            $mysqli = new mysqli("localhost","root","", "e3");
+    //***********************
+    //KONEXIOA SORTZEKO
+    //***********************
+            $mysqli = new mysqli("localhost","root","", "e3_talde3");
 
             // Datu basearekin kontsulta egiteko
+
+    //***********************
+    //ZINEMA LORTZEKO
+    //***********************
             $sql = "SELECT id_zinema,zinema_izena FROM zinema";
             $result = $mysqli->query($sql);
 
@@ -172,6 +179,10 @@
                 <?php
                 }
             ?>
+        
+    //***********************
+    //FILMA LORTZEKO
+    //***********************
             <?php
                 if(isset($_GET['zinema'])){ // isset erabiltzen da jarrita dauden ikusteko
                 ?>
@@ -190,7 +201,6 @@
                 }
             }
             ?>
-
             <?php 
             if(isset($_GET['zinema']) && isset($_GET['filma'] )){  // isset erabiltzen da jarrita dauden ikusteko
             ?>
@@ -198,7 +208,6 @@
             <?php 
             }
             ?>
-
             <?php 
             if(isset($_GET['zinema']) && isset($_GET['filma'] ) && isset($_GET['eguna'] )){ // isset erabiltzen da jarrita dauden ikusteko
             ?>
@@ -208,40 +217,48 @@
             }
             ?>
 
-            <?php
+    //***********************
+    //ORDUA LORTZEKO
+    //***********************
+        <?php
             if(isset($_GET['zinema']) && isset($_GET['filma'] ) && isset($_GET['eguna'] )){
             
-            $data = $_GET['eguna'];  
-            $sql = "SELECT id_saioa, ordutegia, saioaren_eguna FROM saioa WHERE saioaren_eguna = $data";
-            $result = $mysqli->query($sql);
-
-            // Datu basean zerbait egonda (row) sortuko du "option" bat "select"-ean
-            while ($row = $result->fetch_assoc()) {
-                ?>
-                    var aukera = document.createElement("option");
-                    aukera.value = "<?php echo $row['id_saioa']; ?>"; //sortutakoaren balorea hartzen du datu baseetatik (id_zinema)
-                    aukera.textContent = "<?php echo $row['ordutegia']; ?>"; //sortutakoaren izena hartzen du datu baseetatik (zinema_izena)
-                    saioa.appendChild(aukera);
+                $eguna = $_GET['eguna'];
+                $zinema = $_GET['zinema'];
+                $filma = $_GET['filma'];
+                $sql = "SELECT distinct id_saioa, ordutegia FROM saioa WHERE id_zinema = $zinema AND id_filma = $filma AND saioaren_eguna='$eguna' ORDER BY id_saioa ASC";
+                $result = $mysqli->query($sql); 
+                //$row_cnt = $result->num_rows;
+                //saioaren_eguna faltan
+                
+                // echo "Querya.\n". $row_cnt;
+                while ($row = $result->fetch_assoc()) {
+                    ?>
+                            var aukera = document.createElement("option");
+                            aukera.value = "<?php echo $row['id_saioa']; ?>";
+                            aukera.textContent = "<?php echo $row['ordutegia']; ?>";
+                            document.getElementById('saioa').appendChild(aukera);
+                           
+                    <?php
+                        }
+                    
+            }
+        ?>
+    }
     
-                <?php
-                }}
-            ?>
-        }
-    
-        //Zinema aukeratzean url-an agertzeko, onchange-ean jartzen da
-
-        function Zinema_url(){
-            let zinema = document.getElementById("zinema");
-            window.location = window.location.pathname + "?zinema="+zinema.value;
+    //Zinema aukeratzean url-an agertzeko, onchange-ean jartzen da
+            function Zinema_url(){
+                let zinema = document.getElementById("zinema");
+                window.location = window.location.pathname + "?zinema="+zinema.value;
 
         }
 
         //Pelikula aukeratzean url-an agertzeko, onchange-ean jartzen da
 
-        function Pelikula_url(){
-           let zinema = document.getElementById("zinema");
-           let film = document.getElementById("pelikula");
-           window.location = window.location.pathname + "?zinema="+zinema.value + "&filma="+film.value;
+            function Pelikula_url(){
+                let zinema = document.getElementById("zinema");
+                let film = document.getElementById("pelikula");
+                window.location = window.location.pathname + "?zinema="+zinema.value + "&filma="+film.value;
         } 
 
         //Eguna aukeratzean url-an agertzeko, onchange-ean jartzen da
@@ -266,6 +283,13 @@
             
             
             ?>
+        }
+        function Saioa_url() {
+            let saioa = document.getElementById("saioa");
+            let eguna = document.getElementById("eguna");
+            let zinema = document.getElementById("zinema");
+            let filma = document.getElementById("pelikula");
+            window.location = window.location.pathname + "?zinema=" + zinema.value + "&filma=" + filma.value + "&eguna=" + eguna.value + "&saioa=" + saioa.value;
         }
 
     
