@@ -286,3 +286,8 @@ input, select{
     color:white
 
 }
+
+#main-content .formularioaH textarea {
+    width: 345px;
+    height: 200px;
+}

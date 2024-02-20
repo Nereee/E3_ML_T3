@@ -45,7 +45,7 @@
             </header>
             <div class="formulario">
                 <section class="formularioaI">
-                <form id="erosketaForm" action="procesar.php" method="POST">
+                <form id="erosketaForm" action="sarrera.php" method="get">
                     <h6>Erreserba Osatu</h6>
                     <label for="zinema">Zinema aukeratu: </label><br>
                     <select id="zinema" name="zinema" onchange="Zinema_url()">
@@ -62,7 +62,11 @@
                     <!-- (Y-m-d) -->
                     <label for="saioa">Saioa aukeratu: </label><br>
                     <select id="saioa" name="saioa" onchange="Saioa_url()">
-                    <option value="0">----</option></select><br><br>
+                    <option value="0">----</option></select><br>
+                    <label for="kantitate">Kantitatea:</label>
+                    <input type="number" id="kantitate" name="kantitate">
+                    <br>
+                    <br>
                     <input class="botoia" type="submit" name="botoia" value="Jarraitu">
                 </form>
                 </section>
@@ -229,9 +233,7 @@
                 $sql = "SELECT distinct id_saioa, ordutegia FROM saioa WHERE id_zinema = $zinema AND id_filma = $filma AND saioaren_eguna='$eguna' ORDER BY id_saioa ASC";
                 $result = $mysqli->query($sql); 
                 //$row_cnt = $result->num_rows;
-                //saioaren_eguna faltan
                 
-                // echo "Querya.\n". $row_cnt;
                 while ($row = $result->fetch_assoc()) {
                     ?>
                             var aukera = document.createElement("option");
@@ -244,6 +246,16 @@
                     
             }
         ?>
+         <?php 
+            if(isset($_GET['zinema']) && isset($_GET['filma'] ) && isset($_GET['eguna']) && isset($_GET['saioa'])){ // isset erabiltzen da jarrita dauden ikusteko
+            ?>
+                document.getElementById('saioa').value = "<?php echo $_GET['saioa'] ?>"; 
+                document.getElementById('eguna').value = "<?php echo $_GET['eguna'] ?>";
+                document.getElementById('pelikula').value = "<?php echo $_GET['filma'] ?>"; 
+                document.getElementById('zinema').value = "<?php echo $_GET['zinema'] ?>";
+            <?php
+            }
+            ?>
     }
     
     //Zinema aukeratzean url-an agertzeko, onchange-ean jartzen da
@@ -264,25 +276,10 @@
         //Eguna aukeratzean url-an agertzeko, onchange-ean jartzen da
 
         function Eguna_url(){
-            <?php
-            if (isset($_GET['zinema']) && isset($_GET['filma'] )){
-                $zinema = $_GET['zinema'];
-                $filma = $_GET['filma'];
-                $sql = "SELECT ordutegia FROM saioa WHERE id_zinema=$zinema AND id_filma= $filma ";
-                $result = $mysqli->query($sql);
-
-                
-            ?>
-                    let data = document.getElementById("eguna");
-                    let filma = document.getElementById("pelikula");
-                    let zinema = document.getElementById("zinema");
-                    window.location = window.location.pathname + "?zinema="+zinema.value + "&filma="+ filma.value+ "&eguna="+eguna.value;
-                
-            <?php
-                } 
-            
-            
-            ?>
+                let data = document.getElementById("eguna");
+                let filma = document.getElementById("pelikula");
+                let zinema = document.getElementById("zinema");
+                window.location = window.location.pathname + "?zinema="+zinema.value + "&filma="+ filma.value+ "&eguna="+eguna.value;
         }
         function Saioa_url() {
             let saioa = document.getElementById("saioa");

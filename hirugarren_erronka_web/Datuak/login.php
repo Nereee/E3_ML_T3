@@ -39,7 +39,7 @@
 
 	<main id="main-content">
 		<section class="formularioaH">
-            <form action="../Datuak/login.php" method="get" name="formulario_login" id="formulario_login">
+            <form action="../Datuak/erreserbak.php" method="get" name="formulario_login" id="formulario_login">
 			<h5>Saio hasiera</h5>
 			<!-- Gmail-a idazteko -->
 			<input class="control" type="text" name="erabiltzaile" value="" placeholder="Idatzi zure erabiltzailea" required>
@@ -70,7 +70,7 @@ if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
     $servername = "localhost";
     $username = "root";
     $password = "";
-    $db = "e3";
+    $db = "e3_talde3";
 
     // Konexioa sortu
 	$mysqli = new mysqli($servername, $username, $password, $db);
