@@ -1,7 +1,44 @@
+<?php
+session_start();
+
+if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $db = "e3_talde3";
+
+    // Konexioa sortu
+	$mysqli = new mysqli($servername, $username, $password, $db);
+    // Konexioa egiaztatu
+    if ($mysqli->connect_error) {
+        die("Connection failed: " . $mysqli->connect_error);
+    }
+
+	// Kontsulta
+    $izena = $_GET["erabiltzaile"];
+    $pwd = $_GET["pasahitza"];
+	$kontsulta = "SELECT bezero_izena, NAN FROM bezeroa WHERE erabiltzailea = '$izena' AND pasahitza = '$pwd'";
+    $result = $mysqli->query($kontsulta);
+	
+
+    if ($result->num_rows > 0) {
+		$row = $result->fetch_assoc();
+		$_SESSION['NAN'] = $row['NAN'];
+        header("Location: ../Datuak/erreserbak.php");
+        exit(); 
+    } else {
+		
+    echo ("pasahitza eta erabiltzaile ez dira zuzenak");
+    }
+
+    // Konexioa itxi
+   		 $mysqli->close();
+}
+?>
 
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="eu">
 <head>
     <meta charset="UTF-8">
     <title>Hasi saioa</title>
@@ -39,7 +76,7 @@
 
 	<main id="main-content">
 		<section class="formularioaH">
-            <form action="../Datuak/erreserbak.php" method="get" name="formulario_login" id="formulario_login">
+            <form action="login.php" method="get" name="formulario_login" id="formulario_login">
 			<h5>Saio hasiera</h5>
 			<!-- Gmail-a idazteko -->
 			<input class="control" type="text" name="erabiltzaile" value="" placeholder="Idatzi zure erabiltzailea" required>
@@ -65,39 +102,7 @@
 		<a href="http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;"><img class="fi" style="height:22px;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt="1"><img style="height:22px;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt="2"><img style="height:22px;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt="3"><img style="height:22px;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nd.svg?ref=chooser-v1" alt="4"></a>
 	</footer> <!-- / #main-footer -->
 <script>
-	<?php
-if (isset($_GET['erabiltzaile']) && isset($_GET['pasahitza'])) {
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $db = "e3_talde3";
 
-    // Konexioa sortu
-	$mysqli = new mysqli($servername, $username, $password, $db);
-    // Konexioa egiaztatu
-    if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
-    }
-
-	// Kontsulta
-    $izena = $_GET["erabiltzaile"];
-    $pwd = $_GET["pasahitza"];
-	$kontsulta = "SELECT bezero_izena FROM bezeroa WHERE erabiltzailea = '$izena' AND pasahitza = '$pwd'";
-    $result = $mysqli->query($kontsulta);
-
-    if ($result->num_rows > 0) {
-        header("Location: ../Datuak/erreserbak.php");
-        exit(); 
-    } else {
-		?>
-        window.alert("Pasahitza edo erabiltzailea ez dira zuzenak") ;
-		<?php
-    }
-
-    // Konexioa itxi
-   		 $mysqli->close();
-}
-?>
 </script>
 	
 </body>

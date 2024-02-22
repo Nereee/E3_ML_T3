@@ -1,5 +1,38 @@
+<?php
+session_start();
+$servername = "localhost";
+$username = "root";
+$password = "";
+$db = "e3_talde3";
+
+// Konexioa sortu
+$mysqli = new mysqli($servername, $username, $password, $db);
+// Konexioa egiaztatu
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error);
+}
+
+$NAN = $_SESSION['NAN'];
+$eguna = $_POST['eguna'];
+$zinema = $_POST['zinema'];
+$pelikula = $_POST['pelikula'];
+$saioa = $_POST['saioa'];
+$kantitate = $_POST['kantitate'];
+$prezioa = $_POST['prezioa'];
+$deskontu = $_POST['deskontu'];
+
+// Preparar la sentencia SQL
+$sql = "INSERT INTO erosketa (deskontua, erosketa_eguna, kantitatea, faktura, NAN) VALUES ('$deskontu', '$eguna', '$kantitate', '$prezioa', '$NAN')";
+if ($mysqli->query($sql) === true) {
+    echo ("Erosketa ondo burutu da, hona hemen Tiketa");
+} else {
+    echo ("Error 1");
+}
+
+?>
+
 <!DOCTYPE html>
-<html lang="es">
+<html lang="eu">
 <head>
     <meta charset="UTF-8">
     <title>Sarrera</title>
@@ -36,7 +69,7 @@
     <h1><u>SARRERA</u></h1>
     <section class="formularioaH">
         <form action="../index.html" method="get" name="sarrera_form" id="sarrera_form">
-            <textarea name="tiket" id="tiket" cols="30" rows="10" readonly disable></textarea>
+            <h4 id="tiket"></h4>
             <br>
             <input type="button" value="Erreserbatu" onclick="erreserbatu()">
         </form>
@@ -61,51 +94,48 @@
 </footer>
 
 <script>
-function tiketa_sortu(){
-    var queryString = window.location.search;
-    var params = new URLSearchParams(queryString);
-    var zinema = params.get('zinema');
-    var pelikula = params.get('pelikula');
-    var eguna = params.get('eguna');
-    var saioa = params.get('saioa');
-    var kantitate = params.get('kantitate');
-    var prezioa = 5.5;
-    var total = totala_kalkulatu(kantitate, prezioa);
-    var textarea = document.getElementById("tiket");
+    function tiketa_sortu() {
+        $zinema = $_POST['zinema'];
+        $pelikula = $_POST['pelikula'];
+        $eguna = $_POST['eguna'];
+        $saioa = $_POST['saioa'];
+        $kantitate =  $_POST['kantitate'];
+        var prezioa = 5.5;
+        var total = totala_kalkulatu($kantitate, 5.5);
+        var deskontua = deskontua_ikusi($kantitate);
+        var h4 = document.getElementById("tiket");
 
-    textarea.textContent = "zinema=" + zinema + "\n" +
-                     "pelikula=" + pelikula + "\n" +
-                     "eguna=" + eguna + "\n" +
-                     "saioa=" + saioa + "\n" +
-                     "kantitate=" + kantitate + "\n" + "\n" +
-                     "Diru totala=" + total + "€";
-}
-
-function totala_kalkulatu(kantitate, prezioa){
-    var totala = 0;
-    if(kantitate == 1){
-        totala = prezioa;
-    } else if(kantitate == 2){
-        totala = 2 * prezioa * 0.8;
-    } else if(kantitate >= 3){
-        totala = kantitate * prezioa * 0.7;
+        h4.innerHTML = "Zinema: " + $zinema + "<br>" +
+            "Pelikula: " + $pelikula + "<br>" +
+            "Eguna: " + $eguna + "<br>" +
+            "Saioa: " + $saioa + "<br>" +
+            "Kantitate: " + $kantitate + "<br>" +
+            "Deskontua: " + deskontua + "<br><br>" +
+            "Diru totala: " + total + "€";
     }
-    return totala;
-}
-function deskontua_ikusi(kantitate){
-var deskontua=0;
 
-if(kantitate == 1){
-    deskontua = 1;
-} else if(kantitate == 2){
-    deskontua = 2;
-} else if(kantitate >= 3){
-    deskontua = 3;
-}
-    return deskontua;
-}
+    function totala_kalkulatu(kantitate, prezioa) {
+        var totala = 0;
+        if (kantitate == 1) {
+            totala = 5.5;
+        } else if (kantitate == 2) {
+            totala = 2 * 5.5 * 0.8;
+        } else if (kantitate >= 3) {
+            totala = kantitate * 5.5 * 0.7;
+        }
+        return totala;
+    }
+    function deskontua_ikusi(kantitate){
+        if (kantitate == 1) {
+            deskontua = 1;
+        } else if (kantitate == 2) {
+            deskontua = 2;
+        } else if (kantitate >= 3) {
+            deskontua = 3;
+        }
+        return deskontua;
+    
+    }
 
 </script>
-
 </body>
-</html>

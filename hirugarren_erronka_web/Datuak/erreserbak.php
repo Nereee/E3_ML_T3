@@ -1,7 +1,11 @@
+<?php
+session_start();
+?>
+
 <!--HTML FORMATUA-->
 <!DOCTYPE html>
 <!--HIZKUNTZA-->
-<html lang="zxx">
+<html lang="eu">
 <!--HEAD atala html-aren itxura "aldatzeko"-->
 <head>
     <meta charset="utf-8">
@@ -45,7 +49,7 @@
             </header>
             <div class="formulario">
                 <section class="formularioaI">
-                <form id="erosketaForm" action="sarrera.php" method="get">
+                <form id="erosketaForm" action="sarrera.php" method="post">
                     <h6>Erreserba Osatu</h6>
                     <label for="zinema">Zinema aukeratu: </label><br>
                     <select id="zinema" name="zinema" onchange="Zinema_url()">
@@ -64,10 +68,15 @@
                     <select id="saioa" name="saioa" onchange="Saioa_url()">
                     <option value="0">----</option></select><br>
                     <label for="kantitate">Kantitatea:</label>
-                    <input type="number" id="kantitate" name="kantitate">
+                    <input type="number" id="kantitate" name="kantitate" onchange="totala_kalkulatu(this.value,5.5)">
                     <br>
+                    <label for="prezioa">Prezioa:</label>
+                    <input type="number" id="prezioa" name="prezioa" readonly>
                     <br>
-                    <input class="botoia" type="submit" name="botoia" value="Jarraitu">
+                    <input type="hidden" id="deskontu" name="deskontu">
+                    
+                    <br>
+                    <input class="botoia" type="submit" name="botoia" value="Erosi">
                 </form>
                 </section>
             </div>
@@ -289,9 +298,25 @@
             window.location = window.location.pathname + "?zinema=" + zinema.value + "&filma=" + filma.value + "&eguna=" + eguna.value + "&saioa=" + saioa.value;
         }
 
-    
-      
+     
         
+function totala_kalkulatu(kantitate, prezioa){
+    var totala = 0;
+    if(kantitate == 1){
+        totala = prezioa;
+        deskontua = 1;
+    } else if(kantitate == 2){
+        totala = 2 * prezioa * 0.8; 
+        deskontua = 2;
+    } else if(kantitate >= 3){
+        totala = kantitate * prezioa * 0.7;
+        deskontua = 3;
+    }
+    document.getElementById("prezioa").value = totala;
+    document.getElementById("deskontu").value = deskontua;
+    
+    <?php ?>
+}
     </script>
 
 </body>
