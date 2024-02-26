@@ -49,7 +49,7 @@ session_start();
             </header>
             <div class="formulario">
                 <section class="formularioaI">
-                <form id="erosketaForm" action="sarrera.php" method="post">
+                <form id="erosketaForm" action="sarrera.php" method="post" onsubmit="return validarFormulario()">
                     <h6>Erreserba Osatu</h6>
                     <label for="zinema">Zinema aukeratu: </label><br>
                     <select id="zinema" name="zinema" onchange="Zinema_url()">
@@ -62,8 +62,8 @@ session_start();
                         <!-- PHP para generar opciones de película -->
                     </select><br>
                     <label for="eguna">Data aukeratu: </label><br>
-                    <input type="date" onchange="Eguna_url()" name="eguna" id="eguna" min="<?= date('2024-02-01') ?>"><br> 
-                    <!-- (Y-m-d) -->
+                    <input type="date" onchange="Eguna_url()" name="eguna" id="eguna" min="<?= date('Y-m-d') ?>"><br> 
+                    <!--  -->
                     <label for="saioa">Saioa aukeratu: </label><br>
                     <select id="saioa" name="saioa" onchange="Saioa_url()">
                     <option value="0">----</option></select><br>
@@ -315,8 +315,22 @@ function totala_kalkulatu(kantitate, prezioa){
     document.getElementById("prezioa").value = totala;
     document.getElementById("deskontu").value = deskontua;
     
-    <?php ?>
+    
 }
+function validarFormulario() {
+        var zinema = document.getElementById("zinema").value;
+        var pelikula = document.getElementById("pelikula").value;
+        var eguna = document.getElementById("eguna").value;
+        var saioa = document.getElementById("saioa").value;
+        var kantitate = document.getElementById("kantitate").value;
+
+        if (zinema == "0" || pelikula == "0" || eguna == "" || saioa == "0" || kantitate == "") {
+            alert("Mesedez, bete ezazu formularioa eta hautatu erreserbaren osagai guztiak.");
+            return false; 
+        }
+
+        return true; 
+    }
     </script>
 
 </body>
